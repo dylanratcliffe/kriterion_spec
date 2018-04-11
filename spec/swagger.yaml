@@ -11,9 +11,9 @@ info:
 servers:
   - url: "http://localhost/v1"
     description: TODO
-# tags:
-# - name: "pet"
-#   description: Everything about your Pets
+tags:
+- name: "standard"
+  description: Gives hierarchical infomration about standards. Can be used to get all data in one query, or to iteratively build queries.
 #   externalDocs:
 #     description: Find out more
 #     url: "http://swagger.io"
@@ -35,6 +35,9 @@ paths:
   '/standards':
     get:
       summary: Returns all standards.
+      operationId: getAllStandards
+      tags:
+        - standard
       parameters:
         - $ref: '#/components/parameters/DetailLevel'
       responses:
@@ -55,6 +58,9 @@ paths:
   '/standards/{standard}':
     get:
       summary: Returns one specific standard.
+      operationId: getStandard
+      tags:
+        - standard
       parameters:
         - $ref: '#/components/parameters/Standard'
         - $ref: '#/components/parameters/DetailLevel'
@@ -74,6 +80,9 @@ paths:
   '/standards/{standard}/items':
     get:
       summary: Return all items for a given standard
+      operationId: getStandardItems
+      tags:
+        - standard
       parameters:
         - $ref: '#/components/parameters/Standard'
         - $ref: '#/components/parameters/DetailLevel'
@@ -92,6 +101,9 @@ paths:
   '/standards/{standard}/items/{item}':
     get:
       summary: Get the details of a specific item
+      operationId: getStandardItem
+      tags:
+        - standard
       parameters:
         - $ref: '#/components/parameters/Standard'
         - $ref: '#/components/parameters/Item'
@@ -110,6 +122,9 @@ paths:
   '/standards/{standard}/items/{item}/resources':
     get:
       summary: Get all resources for a given item
+      operationId: getStandardItemResources
+      tags:
+        - standard
       parameters:
         - $ref: '#/components/parameters/Standard'
         - $ref: '#/components/parameters/Item'
@@ -128,6 +143,9 @@ paths:
   '/standards/{standard}/items/{item}/resources/{resource}':
     get:
       summary: Get a given resource
+      operationId: getStandardItemResource
+      tags:
+        - standard
       parameters:
         - $ref: '#/components/parameters/Standard'
         - $ref: '#/components/parameters/Item'

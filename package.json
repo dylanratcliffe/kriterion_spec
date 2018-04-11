@@ -11,6 +11,7 @@
     "gulp-util": "^3.0.7",
     "portfinder": "^1.0.3",
     "shelljs": "^0.7.0",
+    "speccy": "^0.5.4",
     "swagger-repo": "^1.0.0",
     "swagger-ui": "^2.1.4"
   },
@@ -19,7 +20,7 @@
     "deploy": "npm run build && deploy-to-gh-pages --update web_deploy",
     "build": "node ./scripts/build.js",
     "swagger": "swagger-repo",
-    "test": "swagger-repo validate",
+    "test": "speccy lint **/*.yaml",
     "start": "gulp serve",
     "deploy-branch": "node ./scripts/deploy-branch.js"
   }
