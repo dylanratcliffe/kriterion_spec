@@ -13,6 +13,7 @@
     "shelljs": "^0.8.1",
     "speccy": "*",
     "swagger-repo": "*",
+    "swagger-ui": "*",
     "swagger-ui-dist": "*"
   },
   "private": true,
