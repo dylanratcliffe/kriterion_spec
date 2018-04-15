@@ -97,7 +97,12 @@ paths:
       tags:
         - standard
       parameters:
-        - $ref: '#/components/parameters/Standard'
+        - name: standard
+          in: path
+          required: true
+          description: "`name` of the standard"
+          schema:
+            type : string
         - $ref: '#/components/parameters/DetailLevel'
       responses:
         '200':
@@ -112,33 +117,13 @@ paths:
                   propertyName: object_type
         '404':
           $ref: '#/components/responses/Error'
-  '/standards/{standard}/items':
-    get:
-      summary: Return all items for a given standard
-      operationId: getStandardItems
-      tags:
-        - standard
-      parameters:
-        - $ref: '#/components/parameters/Standard'
-        - $ref: '#/components/parameters/DetailLevel'
-      responses:
-        '200':
-          description: Returns all items for a given standard
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  oneOf:
-                    - $ref: '#/components/schemas/BasicItem'
-                    - $ref: '#/components/schemas/FullItem'
   # TODO: Add an endpoint that returns and deals with sections
-  '/standards/{standard}/sections':
+  '/sections':
     get:
-      summary: Return all sections for a given standard
+      summary: Return all sections. Can be filtered.
       operationId: getStandardSections
       tags:
-        - standard
+        - section
       parameters:
         - $ref: '#/components/parameters/Standard'
         - $ref: '#/components/parameters/DetailLevel'
@@ -153,15 +138,14 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicSection'
                     - $ref: '#/components/schemas/FullSection'
-  '/standards/{standard}/sections/{section}':
+  '/sections/{uuid}':
     get:
       summary: Return a given section
       operationId: getStandardSection
       tags:
-        - standard
+        - section
       parameters:
-        - $ref: '#/components/parameters/Standard'
-        - $ref: '#/components/parameters/Section'
+        - $ref: '#/components/parameters/UUID'
         - $ref: '#/components/parameters/DetailLevel'
       responses:
         '200':
@@ -172,14 +156,43 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/BasicSection'
                   - $ref: '#/components/schemas/FullSection'
+        '404':
+          $ref: '#/components/responses/Error'
+  '/sections/{uuid}/subsections':
+    get:
+      summary: Return all subsections for a given section
+      operationId: getStandardSections
+      tags:
+        - section
+      parameters:
+        - $ref: '#/components/parameters/UUID'
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Returns all sections for a given standard
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/BasicSection'
+                    - $ref: '#/components/schemas/FullSection'
   '/items':
     get:
-      summary: Return all items
+      summary: Search for items.
       operationId: getStandardItems
       tags:
         - item
       parameters:
         - $ref: '#/components/parameters/DetailLevel'
+        - $ref: '#/components/parameters/Standard'
+        - name: section
+          in: query
+          required: false
+          description: "`uuid` of the section"
+          schema:
+            $ref: '#/components/schemas/UUID'
       responses:
         '200':
           description: Returns all items for all standards
@@ -191,56 +204,38 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicItem'
                     - $ref: '#/components/schemas/FullItem'
-  '/items/{standard}':
+  '/items/{uuid}':
     get:
-      summary: Return all items for a specific standard
+      summary: Returns one specific item
+      # TODO: Rename all opertaionIds
       operationId: getStandardItems
       tags:
         - item
       parameters:
-        - $ref: '#/components/parameters/Standard'
+        - $ref: '#/components/parameters/UUID'
         - $ref: '#/components/parameters/DetailLevel'
       responses:
         '200':
-          description: Returns all items for a given standard
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  oneOf:
-                    - $ref: '#/components/schemas/BasicItem'
-                    - $ref: '#/components/schemas/FullItem'
-  '/standards/{standard}/items/{item}':
-    get:
-      summary: Get the details of a specific item
-      operationId: getStandardItem
-      tags:
-        - standard
-      parameters:
-        - $ref: '#/components/parameters/Standard'
-        - $ref: '#/components/parameters/Item'
-        - $ref: '#/components/parameters/DetailLevel'
-      responses:
-        '200':
-          description: Returns a single item
+          description: Returns the queried item
           content:
             application/json:
               schema:
                 oneOf:
                   - $ref: '#/components/schemas/BasicItem'
                   - $ref: '#/components/schemas/FullItem'
-        '404':
-          $ref: '#/components/responses/Error'
-  '/standards/{standard}/items/{item}/resources':
+  '/resources':
     get:
-      summary: Get all resources for a given item
+      summary: Queries resources
       operationId: getStandardItemResources
       tags:
-        - standard
+        - resource
       parameters:
-        - $ref: '#/components/parameters/Standard'
-        - $ref: '#/components/parameters/Item'
+        - name: item
+          in: query
+          required: false
+          description: "`UUID` of the item"
+          schema:
+            $ref: '#/components/schemas/UUID'
         - $ref: '#/components/parameters/DetailLevel'
       responses:
         '200':
@@ -253,16 +248,19 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicResource'
                     - $ref: '#/components/schemas/FullResource'
-  '/standards/{standard}/items/{item}/resources/{resource}':
+  '/resources/{uuid}':
     get:
       summary: Get a given resource
       operationId: getStandardItemResource
       tags:
-        - standard
+        - resource
       parameters:
-        - $ref: '#/components/parameters/Standard'
-        - $ref: '#/components/parameters/Item'
-        - $ref: '#/components/parameters/Resource'
+        - name: uuid
+          in: path
+          required: true
+          description: "`UUID` of the resource"
+          schema:
+            $ref: '#/components/schemas/UUID'
         - $ref: '#/components/parameters/DetailLevel'
       responses:
         '200':
@@ -275,9 +273,32 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicResource'
                     - $ref: '#/components/schemas/FullResource'
-
-
-
+        '404':
+          $ref: '#/components/responses/Error'
+  '/events':
+    get:
+      summary: Queries events
+      operationId: todo
+      tags:
+        - event
+      parameters:
+        - name: resource
+          in: query
+          required: false
+          description: "`UUID` of the resource"
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Array of all events for a given resource
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+# TODO: Check that all things that should have 404s, have 404s
 
 #
 # Components
@@ -289,16 +310,9 @@ components:
   parameters:
     Standard:
       name: standard
-      in: path
-      required: true
+      in: query
+      required: false
       description: "`name` of the standard"
-      schema:
-        type : string
-    Section:
-      name: section
-      in: path
-      required: true
-      description: "`name` of the section"
       schema:
         type : string
     Item:
@@ -306,13 +320,6 @@ components:
       in: path
       required: true
       description: "`id` of the item"
-      schema:
-        type : string
-    Resource:
-      name: resource
-      in: path
-      required: true
-      description: "This is the type & title of the resource in the format: `Type[title]` e.g. `File[/etc/hosts]`. This should be URL encoded otherwise shit will likely hit the fan in a big way"
       schema:
         type : string
     DetailLevel:
@@ -326,7 +333,13 @@ components:
           - full
         default: basic
       required: false
-
+    UUID:
+      name: uuid
+      in: path
+      required: true
+      description: "`uuid` of object that is being queried"
+      schema:
+        $ref: '#/components/schemas/UUID'
 
   #
   # Schemas
@@ -449,9 +462,11 @@ components:
           type: string
           nullable: true
           description: A string representing the severity of the `item`. Possibly the `standard` should define some way of telling actually how severe something is so that it can have a colour or something.
-        standard:
-          type: string
-          description: Name of the standard that this item is relevant to
+        section_uuid:
+          allOf:
+            - $ref: '#/components/schemas/UUID'
+            - description: "UUID of the section that this item is relevant to. Can also return `null` if the item is a direct child of a standard. *TODO: Is this required? Seems like this is making it very relational-database-ey, does it really need to be here?*"
+              nullable: true
         subsection_path:
           type: array
           description: This is an array of the capturinng groups that have been found for this item. If there are no subsections this will be an empty array
@@ -625,7 +640,7 @@ components:
   #
   responses:
     Error:
-      description: A ganeric error
+      description: A generic error
       content:
         application/json:
           schema:
