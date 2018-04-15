@@ -9,12 +9,13 @@
     "gulp": "^3.9.1",
     "gulp-connect": "*",
     "gulp-util": "*",
+    "npm": "^5.8.0",
     "portfinder": "*",
     "shelljs": "^0.8.1",
     "speccy": "*",
-    "swagger-repo": "*",
-    "swagger-ui": "*",
-    "swagger-ui-dist": "*"
+    "swagger-repo": "^1.5.1",
+    "swagger-ui": "^3.13.4",
+    "swagger-ui-dist": "^3.13.4"
   },
   "private": true,
   "scripts": {

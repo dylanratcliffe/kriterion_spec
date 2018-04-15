@@ -1,7 +1,40 @@
 openapi: 3.0.0
 info:
   title: "Puppet Compliance API"
-  description: "Puppet Compliance API\n\n## Object Hierarachy\n\nStandard `->` Section `->` Item `->` Resource `->` Event \n\n\ Each of these objects has a many to-one relationhsip with its upstream counterpart."
+  description: |
+    # Using the API
+
+    ## Object Hierarachy
+
+    Standard `->` Section `->` Item `->` Resource `->` Event IS THIS RIGHT?? TODO
+
+    Each of these objects has a many to-one relationhsip with its upstream counterpart.
+
+    # Puppet Integration
+
+    In order for the compliance API to be able to query the Puppet database and filter out events/resources that are not relevant to compliance, all resoures that are to appear in the compliance API must be tagged. The Compliance API server will then extract data based on these tags.
+
+    Each resource must have at least the following tags:
+
+      - **Standard Name:** The name of the standard, as returned by the `/standard` endpoint
+      - **Item Number:** The number of the item that the resource is relevant to. This must match the `item_syntax` regular expression
+
+    An example of enforcing item `V-38598` from the `STIG_RHEL_6` standard would be as follows:
+
+    ```puppet
+    service { 'rexecd':
+      ensure => stopped,
+      enable => false,
+      tag    => [
+        'STIG_RHEL_6',
+        'V-38598',
+      ],
+    }
+    ```
+
+    These tags can be applied on a per-resource basis, or to an entire scope using the [tag()](https://puppet.com/docs/puppet/5.3/lang_tags.html#the-tag-function) function.
+
+    Properly tagging resources is the only thing that is required from the Puppet side in order to use this API.
   version: "0.1.0"
   contact:
     email: "dylanratcliffe@outlook.com"
@@ -12,8 +45,10 @@ servers:
   - url: "http://localhost/v1"
     description: TODO
 tags:
-- name: "standard"
-  description: Gives hierarchical infomration about standards. Can be used to get all data in one query, or to iteratively build queries.
+  - name: "standard"
+    description: Gives hierarchical infomration about standards. Can be used to get all data in one query, or to iteratively build queries.
+  - name: "item"
+    description: Returns items TODO
 #   externalDocs:
 #     description: Find out more
 #     url: "http://swagger.io"
@@ -98,6 +133,84 @@ paths:
                     - $ref: '#/components/schemas/BasicItem'
                     - $ref: '#/components/schemas/FullItem'
   # TODO: Add an endpoint that returns and deals with sections
+  '/standards/{standard}/sections':
+    get:
+      summary: Return all sections for a given standard
+      operationId: getStandardSections
+      tags:
+        - standard
+      parameters:
+        - $ref: '#/components/parameters/Standard'
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Returns all sections for a given standard
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/BasicSection'
+                    - $ref: '#/components/schemas/FullSection'
+  '/standards/{standard}/sections/{section}':
+    get:
+      summary: Return a given section
+      operationId: getStandardSection
+      tags:
+        - standard
+      parameters:
+        - $ref: '#/components/parameters/Standard'
+        - $ref: '#/components/parameters/Section'
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Returns one section
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/BasicSection'
+                  - $ref: '#/components/schemas/FullSection'
+  '/items':
+    get:
+      summary: Return all items
+      operationId: getStandardItems
+      tags:
+        - item
+      parameters:
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Returns all items for all standards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/BasicItem'
+                    - $ref: '#/components/schemas/FullItem'
+  '/items/{standard}':
+    get:
+      summary: Return all items for a specific standard
+      operationId: getStandardItems
+      tags:
+        - item
+      parameters:
+        - $ref: '#/components/parameters/Standard'
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Returns all items for a given standard
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/BasicItem'
+                    - $ref: '#/components/schemas/FullItem'
   '/standards/{standard}/items/{item}':
     get:
       summary: Get the details of a specific item
@@ -179,6 +292,13 @@ components:
       in: path
       required: true
       description: "`name` of the standard"
+      schema:
+        type : string
+    Section:
+      name: section
+      in: path
+      required: true
+      description: "`name` of the section"
       schema:
         type : string
     Item:
@@ -266,6 +386,8 @@ components:
       type: "object"
       description: "Hash containing the names and descriptions of all the sections and their items and subsections. Sections are dynamically generated from the resources that have been discovered, with the `description` coming from the standard backend. It is important that the final capturing group for each section is ignored. This means that if you have a standard like `5.12.3` and one like `1.2.35.123` you don't end up with a section called `5.12.3` with only one thing in it."
       properties:
+        uuid:
+          $ref: '#/components/schemas/UUID'
         name:
           type: string
           description: "The name of the section is just all the capturing groups minus the last one, joined with the `section_separator` from the `standard`"
@@ -311,6 +433,8 @@ components:
     BasicItem:
       type: "object"
       properties:
+        uuid:
+          $ref: '#/components/schemas/UUID'
         id:
           type: string
           description: The ID of the item is the `subsection_path`, joined with the `subsection_separator` from the `standard` e.g. `1.1.1.3`
@@ -325,6 +449,9 @@ components:
           type: string
           nullable: true
           description: A string representing the severity of the `item`. Possibly the `standard` should define some way of telling actually how severe something is so that it can have a colour or something.
+        standard:
+          type: string
+          description: Name of the standard that this item is relevant to
         subsection_path:
           type: array
           description: This is an array of the capturinng groups that have been found for this item. If there are no subsections this will be an empty array
@@ -357,6 +484,8 @@ components:
       type: object
       description: "This represents a Puppet resource. The property names and values are the same as those returned by the PuppetDB API with the exception of things that will change on a per-host basis such as `parameters`, `certname`, `resource` and `exported`."
       properties:
+        uuid:
+          $ref: '#/components/schemas/UUID'
         tags:
           type: array
           description: From PuppetDB
@@ -486,7 +615,10 @@ components:
           type: integer
         total:
           type: integer
-
+    UUID:
+      type: string
+      description: "UUID as per RFC 4122"
+      pattern: '[0-9A-f]{8}-[0-9A-f]{4}-[0-9A-f]{4}-[0-9A-f]{4}-[0-9A-f]{12}'
 
   #
   # Responses
