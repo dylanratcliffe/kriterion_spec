@@ -5,6 +5,8 @@ var Path = require('path');
 require('shelljs/global');
 set('-e');
 
+rm('-rf', 'web_deploy')
+
 mkdir('-p', 'web_deploy')
 
 cp('-R', 'web/*', 'web_deploy/');
