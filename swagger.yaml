@@ -6,7 +6,13 @@ info:
 
     ## Object Hierarachy
 
-    Standard `->` Section `->` Item `->` Resource `->` Event IS THIS RIGHT?? TODO
+    ``` TODO: Finish this
+    Standard
+    Item
+    Section
+    Resource
+    Event
+    ```
 
     Each of these objects has a many to-one relationhsip with its upstream counterpart.
 
@@ -117,7 +123,6 @@ paths:
                   propertyName: object_type
         '404':
           $ref: '#/components/responses/Error'
-  # TODO: Add an endpoint that returns and deals with sections
   '/sections':
     get:
       summary: Return all sections. Can be filtered.
@@ -373,6 +378,21 @@ components:
         section_separator:
           type: string
           description: This is what is used to construct the names of each section. If a section is found that has subsections, the capturing groups will be joined using the separator giving nice subsection names such as \"1.1.3\". If this is set to `null`, subsections will not be joined and will be names exactly as captured in the capturing group.
+        compliance:
+          type: object
+          description: "This should return a summary of the compliance information of all `items` and `sections` under this standard. you could possibly argue that this should also return the `resource` and `event` info but I feel like that's probably a bit much. It can always be added later if required."
+          properties:
+            compliant:
+              type: boolean
+              description: "Returns true if all child `items`, including those from subsections, also return `true` for this value."
+            items:
+              allOf:
+                - $ref: '#/components/schemas/ComplianceCount'
+                - description: "This is the compliance state of all items that are **direct** decendants of this standard."
+            sections:
+              allOf:
+                - $ref: '#/components/schemas/ComplianceCount'
+                - description: "Compliance count of all sections based on their boolean compliance value"
     FullStandard:
       allOf:
         - $ref: '#/components/schemas/BasicStandard'
@@ -412,7 +432,7 @@ components:
           description: "Description of the section. This comes from the standard backend, should support markdown as should all long text fields."
         compliance:
           type: object
-          description: "This should return a summary of the compliance information of all `items` under this section. you could possibly argue that this should also return the `resource` and `event` info but I fell like that's probably a bit much. It can always be added later of required."
+          description: "This should return a summary of the compliance information of all `items` under this section. you could possibly argue that this should also return the `resource` and `event` info but I feel like that's probably a bit much. It can always be added later if required."
           properties:
             compliant:
               type: boolean
