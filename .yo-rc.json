@@ -1,0 +1,11 @@
+{
+  "generator-openapi-repo": {
+    "importExistingSpec": true,
+    "importedSpec": "swagger.yaml",
+    "name": "Puppet Compliance",
+    "repo": "dylanratcliffe/compliance_api_spec",
+    "splitSpec": false,
+    "samples": true,
+    "installSwaggerUI": true
+  }
+}
