@@ -51,10 +51,16 @@ servers:
   - url: "http://localhost/v1"
     description: TODO
 tags:
-  - name: "standard"
-    description: Gives hierarchical infomration about standards. Can be used to get all data in one query, or to iteratively build queries.
+  - name: event
+    description: Gives details of events, a child of resources
   - name: "item"
     description: Returns items TODO
+  - name: resource
+    description: Gives details of resources, a child of items
+  - name: section
+    description: Gives details of sections, a child of standards
+  - name: standard
+    description: Gives hierarchical infomration about standards. Can be used to get all data in one query, or to iteratively build queries.
 #   externalDocs:
 #     description: Find out more
 #     url: "http://swagger.io"
@@ -76,7 +82,7 @@ paths:
   '/standards':
     get:
       summary: Returns all standards.
-      operationId: getAllStandards
+      operationId: getStandards
       tags:
         - standard
       parameters:
@@ -126,7 +132,7 @@ paths:
   '/sections':
     get:
       summary: Return all sections. Can be filtered.
-      operationId: getStandardSections
+      operationId: getSections
       tags:
         - section
       parameters:
@@ -146,7 +152,7 @@ paths:
   '/sections/{uuid}':
     get:
       summary: Return a given section
-      operationId: getStandardSection
+      operationId: getSection
       tags:
         - section
       parameters:
@@ -166,7 +172,7 @@ paths:
   '/sections/{uuid}/subsections':
     get:
       summary: Return all subsections for a given section
-      operationId: getStandardSections
+      operationId: getSectionSubsections
       tags:
         - section
       parameters:
@@ -186,7 +192,7 @@ paths:
   '/items':
     get:
       summary: Search for items.
-      operationId: getStandardItems
+      operationId: getItems
       tags:
         - item
       parameters:
@@ -213,7 +219,7 @@ paths:
     get:
       summary: Returns one specific item
       # TODO: Rename all opertaionIds
-      operationId: getStandardItems
+      operationId: getItem
       tags:
         - item
       parameters:
@@ -231,7 +237,7 @@ paths:
   '/resources':
     get:
       summary: Queries resources
-      operationId: getStandardItemResources
+      operationId: getResources
       tags:
         - resource
       parameters:
@@ -256,7 +262,7 @@ paths:
   '/resources/{uuid}':
     get:
       summary: Get a given resource
-      operationId: getStandardItemResource
+      operationId: getResource
       tags:
         - resource
       parameters:
@@ -283,7 +289,7 @@ paths:
   '/events':
     get:
       summary: Queries events
-      operationId: todo
+      operationId: getEvents
       tags:
         - event
       parameters:
