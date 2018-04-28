@@ -1,29 +1,21 @@
 {
-  "name": "Puppet-Compliance-openapi-spec",
+  "name": "puppet-compliance-openapi-spec",
   "version": "0.0.1",
   "dependencies": {
-    "bower": "*",
-    "connect": "*",
-    "cors": "*",
-    "deploy-to-gh-pages": "*",
-    "gulp": "^3.9.1",
-    "gulp-connect": "*",
-    "gulp-util": "*",
-    "npm": "^5.8.0",
-    "portfinder": "*",
+    "js-yaml": "^3.11.0",
+    "npm": "^6.0.0",
     "shelljs": "^0.8.1",
-    "speccy": "*",
-    "swagger-repo": "^1.5.1",
-    "swagger-ui": "^3.13.4",
-    "swagger-ui-dist": "^3.13.4"
+    "speccy": "^0.5.4",
+    "swagger-ui-dist": "^3.13.6"
   },
   "private": true,
   "scripts": {
-    "deploy": "npm run build && deploy-to-gh-pages --update web_deploy",
+    "deploy": "node ./scripts/deploy.js",
     "build": "node ./scripts/build.js",
-    "swagger": "swagger-repo",
     "test": "speccy lint **/*.yaml",
-    "start": "gulp serve",
-    "deploy-branch": "node ./scripts/deploy-branch.js"
+    "start": "http-server web"
+  },
+  "devDependencies": {
+    "gh-pages": "^1.1.0"
   }
 }

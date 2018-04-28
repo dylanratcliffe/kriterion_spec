@@ -1,20 +1,32 @@
 #!/usr/bin/env node
-'use strict';
-var Path = require('path');
-
 require('shelljs/global');
-set('-e');
+const yaml            = require('js-yaml');
+const specFolder      = './spec/';
+const webFolder       = './web/'
+const fs              = require('fs');
+const pathToSwaggerUi = require('swagger-ui-dist').absolutePath()
 
-rm('-rf', 'web_deploy')
+// Remove old content
+rm('-rf', 'web')
 
-mkdir('-p', 'web_deploy')
+console.log('Creating /web driectory');
+mkdir('-p', 'web')
 
-cp('-R', 'web/*', 'web_deploy/');
+cp('-r', pathToSwaggerUi + '/*', 'web');
 
-exec('npm run swagger bundle --        -o web_deploy/swagger.json');
-exec('npm run swagger bundle -- --yaml -o web_deploy/swagger.yaml');
+// Read all spec files and output them as json
+console.log('Converting spec to JSON');
+fs.readdirSync(specFolder).forEach(file => {
+  if (/\.yaml$/.test(file)) {
+    // Only convert yaml files
+    console.log('Converting ' + file);
+    obj = yaml.load(fs.readFileSync(specFolder + file, {encoding: 'utf-8'}));
+    jsonFile = webFolder + file.slice(0, -5) + '.json'
+    fs.writeFileSync(jsonFile, JSON.stringify(obj, null, 2));
+  } else {
+    // Copy all other files
+    cp('',specFolder + file, webFolder + file)
+  }
+})
 
-const swaggerUiAssetPath = require("swagger-ui-dist").getAbsoluteFSPath()
-rm('-rf', 'web_deploy/swagger-ui/')
-cp('-R', swaggerUiAssetPath, 'web_deploy/swagger-ui/')
-sed('-i', 'http://petstore.swagger.io/v2/swagger.json', '../swagger.json', 'web_deploy/swagger-ui/index.html')
+sed('-i', 'http://petstore.swagger.io/v2/swagger.json', 'swagger.json', 'web/index.html')
