@@ -11,7 +11,7 @@
   },
   "private": true,
   "scripts": {
-    "deploy": "gh-pages --repo https://$GH_TOKEN@github.com/dylanratcliffe/compliance_api_spec.git -d web",
+    "deploy": "npm run build && gh-pages --repo https://$GH_TOKEN@github.com/dylanratcliffe/compliance_api_spec.git -d web",
     "build": "node ./scripts/build.js",
     "test": "speccy lint **/*.yaml",
     "start": "http-server web"
