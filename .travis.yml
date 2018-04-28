@@ -1,6 +1,14 @@
 language: node_js
 node_js:
   - "node"
+
+cache:
+  directories:
+    - node_modules
+
+env:
+  - NODE_DEBUG=gh-pages
+
 deploy:
   - skip_cleanup: true
     provider: script
