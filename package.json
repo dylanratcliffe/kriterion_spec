@@ -1,27 +1,72 @@
 {
-  "name": "Puppet-Compliance-openapi-spec",
-  "version": "0.0.1",
-  "dependencies": {
-    "bower": "^1.7.7",
-    "connect": "^3.4.1",
-    "cors": "^2.7.1",
-    "deploy-to-gh-pages": "^1.1.0",
-    "gulp": "^3.9.1",
-    "gulp-connect": "^4.2.0",
-    "gulp-util": "^3.0.7",
-    "portfinder": "^1.0.3",
-    "shelljs": "^0.7.0",
-    "speccy": "^0.5.4",
-    "swagger-repo": "^1.0.0",
-    "swagger-ui": "^2.1.4"
+  "_from": "swagger-ui-dist",
+  "_id": "swagger-ui-dist@3.13.6",
+  "_inBundle": false,
+  "_integrity": "sha1-d84y8PMvKgaIxVWScIowFHUwyE4=",
+  "_location": "/swagger-ui-dist",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "swagger-ui-dist",
+    "name": "swagger-ui-dist",
+    "escapedName": "swagger-ui-dist",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
   },
-  "private": true,
-  "scripts": {
-    "deploy": "npm run build && deploy-to-gh-pages --update web_deploy",
-    "build": "node ./scripts/build.js",
-    "swagger": "swagger-repo",
-    "test": "speccy lint **/*.yaml",
-    "start": "gulp serve",
-    "deploy-branch": "node ./scripts/deploy-branch.js"
-  }
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/swagger-ui-dist/-/swagger-ui-dist-3.13.6.tgz",
+  "_shasum": "77ce32f0f32f2a0688c55592708a30147530c84e",
+  "_spec": "swagger-ui-dist",
+  "_where": "/Users/dylan/git/compliance_api_spec",
+  "bugs": {
+    "url": "https://github.com/swagger-api/swagger-ui/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "url": "in alphabetical order"
+    },
+    {
+      "name": "Anna Bodnia",
+      "email": "anna.bodnia@gmail.com"
+    },
+    {
+      "name": "Buu Nguyen",
+      "email": "buunguyen@gmail.com"
+    },
+    {
+      "name": "Josh Ponelat",
+      "email": "jponelat@gmail.com"
+    },
+    {
+      "name": "Kyle Shockey",
+      "email": "kyleshockey1@gmail.com"
+    },
+    {
+      "name": "Robert Barnwell",
+      "email": "robert@robertismy.name"
+    },
+    {
+      "name": "Sahar Jafari",
+      "email": "shr.jafari@gmail.com"
+    }
+  ],
+  "dependencies": {},
+  "deprecated": false,
+  "description": "[![NPM version](https://badge.fury.io/js/swagger-ui-dist.svg)](http://badge.fury.io/js/swagger-ui-dist)",
+  "devDependencies": {},
+  "homepage": "https://github.com/swagger-api/swagger-ui#readme",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "name": "swagger-ui-dist",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/swagger-api/swagger-ui.git"
+  },
+  "version": "3.13.6"
 }

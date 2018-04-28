@@ -1,43 +1,22 @@
-# Puppet Compliance OpenAPI Specification
-[![Build Status](https://travis-ci.org/dylanratcliffe/compliance_api_spec.svg?branch=master)](https://travis-ci.org/dylanratcliffe/compliance_api_spec)
+# Swagger UI Dist
+[![NPM version](https://badge.fury.io/js/swagger-ui-dist.svg)](http://badge.fury.io/js/swagger-ui-dist)
 
-## Steps to finish
+# API
 
-1. Enable [Travis](https://docs.travis-ci.com/user/getting-started/#To-get-started-with-Travis-CI%3A) for your repository (**note**: you already have `.travis.yml` file)
-2. [Create GitHub access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/); check `public_repo` on `Select scopes` section.
-3. Use the token value as a value for [Travis environment variable](https://docs.travis-ci.com/user/environment-variables/#Defining-Variables-in-Repository-Settings) with the name `GH_TOKEN`
-4. Make a test commit to trigger CI: `git commit --allow-empty -m "Test Travis CI" && git push`
-5. Wait until Travis build is finished. You can check progress by clicking on the `Build Status` badge at the top
-6. If you did everything correct, https://dylanratcliffe.github.io/compliance_api_spec/ will lead to your new docs
-7. **[Optional]** You can setup [custom domain](https://help.github.com/articles/using-a-custom-domain-with-github-pages/) (just create `web/CNAME` file)
-8. Start writing/editing your OpenAPI spec: check out [usage](#usage) section below
-9. **[Optional]** If you document public API consider adding it into [APIs.guru](https://APIs.guru) directory using [this form](https://apis.guru/add-api/).
-10. Delete this section :smile:
+This module, `swagger-ui-dist`, exposes Swagger-UI's entire dist folder as a dependency-free npm module.
+Use `swagger-ui` instead, if you'd like to have npm install dependencies for you.
 
-## Links
+`SwaggerUIBundle` and `SwaggerUIStandalonePreset` can be imported:
+```javascript
+  import { SwaggerUIBundle, SwaggerUIStandalonePreset } from "swagger-ui-dist"
+```
 
-- Documentation(ReDoc): https://dylanratcliffe.github.io/compliance_api_spec/
-- SwaggerUI: https://dylanratcliffe.github.io/compliance_api_spec/swagger-ui/
-- Look full spec:
-    + JSON https://dylanratcliffe.github.io/compliance_api_spec/swagger.json
-    + YAML https://dylanratcliffe.github.io/compliance_api_spec/swagger.yaml
-- Preview spec version for branch `[branch]`: https://dylanratcliffe.github.io/compliance_api_spec/preview/[branch]
+To get an absolute path to this directory for static file serving, use the exported `getAbsoluteFSPath` method:
 
-**Warning:** All above links are updated only after Travis CI finishes deployment
+```javascript
+const swaggerUiAssetPath = require("swagger-ui-dist").getAbsoluteFSPath()
 
-## Working on specification
-### Install
+// then instantiate server that serves files from the swaggerUiAssetPath
+```
 
-1. Install [Node JS](https://nodejs.org/)
-2. Clone repo and `cd`
-    + Run `npm install`
-
-### Usage
-
-1. Run `npm start`
-2. Checkout console output to see where local server is started. You can use all [links](#links) (except `preview`) by replacing https://dylanratcliffe.github.io/compliance_api_spec/ with url from the message: `Server started <url>`
-3. Make changes using your favorite editor or `swagger-editor` (look for URL in console output)
-4. All changes are immediately propagated to your local server, moreover all documentation pages will be automagically refreshed in a browser after each change
-**TIP:** you can open `swagger-editor`, documentation and `swagger-ui` in parallel
-5. Once you finish with the changes you can run tests using: `npm test`
-6. Share you changes with the rest of the world by pushing to GitHub :smile:
+For anything else, check the [Swagger-UI](https://github.com/swagger-api/swagger-ui) repository.
