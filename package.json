@@ -15,5 +15,5 @@
     "build": "node ./scripts/build.js",
     "test": "speccy lint **/*.yaml",
     "start": "http-server web"
-  },
+  }
 }
