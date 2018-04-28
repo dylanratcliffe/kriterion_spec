@@ -5,8 +5,9 @@
     "js-yaml": "^3.11.0",
     "npm": "^6.0.0",
     "shelljs": "^0.8.1",
+    "gh-pages": "^1.1.0",
     "speccy": "^0.5.4",
-    "swagger-ui-dist": "^3.13.6"
+    "swagger-ui-dist": "^3.14.0"
   },
   "private": true,
   "scripts": {
@@ -15,7 +16,4 @@
     "test": "speccy lint **/*.yaml",
     "start": "http-server web"
   },
-  "devDependencies": {
-    "gh-pages": "^1.1.0"
-  }
 }
