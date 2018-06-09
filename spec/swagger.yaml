@@ -6,15 +6,22 @@ info:
 
     ## Object Hierarachy
 
-    ``` TODO: Finish this
+    ```
     Standard
-    Item
-    Section
-    Resource
-    Event
+    ├── Item
+    |   └── Resource
+    |       └── Event
+    └── Section
+        ├── Section
+        |   └── Section.. etc
+        └── Item
+            └── Resource
+                └── Event
     ```
 
-    Each of these objects has a many to-one relationhsip with its upstream counterpart.
+    **The Blurb**
+
+    *A `standard` represents a compliance standard such as the STIG standard for RHEL 7. A standard is usually made up of many `sections` such as "Networking" or "User Access", however they may have direct items under them too. `Sections` are purely for organisation and usually have a name and a number such as 3. Each section may have many items and subsections such as 3.1, 3.2, 3.2.1 etc. An `item` represents a thing that the compliance standard has a particular opinion about. This might be that "All .rhosts files should be absent" or similar. An `item` may be implemented by one or many `resources`. On some servers it might take just one resource to ensure that an item is compliant, on others it might take 7. Each resource then has `events`. Hopefully most of the time the events are "unchanged" which would mean that the resource is compliant on that server, however they may have a pending noop action or be failing which would mean that particular resource and by extension, item, section and standard are to some degree non-compliant.*
 
     # Puppet Integration
 
@@ -47,14 +54,14 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-servers:
-  - url: "http://localhost/v1"
-    description: TODO
+# servers:
+#   - url: "http://localhost/v1"
+#     description: Not yet implemented
 tags:
   - name: event
     description: Gives details of events, a child of resources
-  - name: "item"
-    description: Returns items TODO
+  - name: item
+    description: Returns items, these are things that are actually compliant or non-compliant
   - name: resource
     description: Gives details of resources, a child of items
   - name: section
@@ -100,8 +107,6 @@ paths:
                     - $ref: '#/components/schemas/FullStandard'
                   discriminator:
                     propertyName: object_type
-        '404':
-          $ref: '#/components/responses/Error'
   '/standards/{standard}':
     get:
       summary: Returns one specific standard.
@@ -149,6 +154,8 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicSection'
                     - $ref: '#/components/schemas/FullSection'
+        '404':
+          $ref: '#/components/responses/Error'
   '/sections/{uuid}':
     get:
       summary: Return a given section
@@ -189,6 +196,8 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicSection'
                     - $ref: '#/components/schemas/FullSection'
+        '404':
+          $ref: '#/components/responses/Error'
   '/items':
     get:
       summary: Search for items.
@@ -215,10 +224,11 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicItem'
                     - $ref: '#/components/schemas/FullItem'
+        '404':
+          $ref: '#/components/responses/Error'
   '/items/{uuid}':
     get:
       summary: Returns one specific item
-      # TODO: Rename all opertaionIds
       operationId: getItem
       tags:
         - item
@@ -234,6 +244,8 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/BasicItem'
                   - $ref: '#/components/schemas/FullItem'
+        '404':
+          $ref: '#/components/responses/Error'
   '/resources':
     get:
       summary: Queries resources
@@ -259,6 +271,8 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicResource'
                     - $ref: '#/components/schemas/FullResource'
+        '404':
+          $ref: '#/components/responses/Error'
   '/resources/{uuid}':
     get:
       summary: Get a given resource
@@ -309,7 +323,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-# TODO: Check that all things that should have 404s, have 404s
+        '404':
+          $ref: '#/components/responses/Error'
 
 #
 # Components
@@ -491,7 +506,7 @@ components:
         section_uuid:
           allOf:
             - $ref: '#/components/schemas/UUID'
-            - description: "UUID of the section that this item is relevant to. Can also return `null` if the item is a direct child of a standard. *TODO: Is this required? Seems like this is making it very relational-database-ey, does it really need to be here?*"
+            - description: "UUID of the section that this item is relevant to. Can also return `null` if the item is a direct child of a standard."
               nullable: true
         subsection_path:
           type: array
@@ -607,7 +622,6 @@ components:
             - success
             - failure # More to come, noop etc.
           # TODO: Change this to an enum with all the possible values that PuppetDB will return
-          # TODO: Document how to identify what is and is not compliant, and *possibly* add a property for this. Maybe only the properties that are likely to be useful should be at the top level and the others should be buried or something...?
           description: From PuppetDB
         configuration_version:
           type: string
@@ -641,6 +655,9 @@ components:
         message:
           type: string
           description: From PuppetDB
+        compliant?:
+          type: boolean
+          description: Wheather or not the resource is compliant, based on the `status`
     ComplianceCount:
       type: object
       properties:
