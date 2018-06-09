@@ -2,12 +2,12 @@
   "name": "puppet-compliance-openapi-spec",
   "version": "0.0.1",
   "dependencies": {
-    "js-yaml": "^3.11.0",
-    "npm": "^6.0.0",
-    "shelljs": "^0.8.1",
-    "gh-pages": "^1.1.0",
+    "gh-pages": "^1.2.0",
+    "js-yaml": "^3.12.0",
+    "npm": "^6.1.0",
+    "shelljs": "^0.8.2",
     "speccy": "^0.5.4",
-    "swagger-ui-dist": "^3.14.0"
+    "swagger-ui-dist": "^3.17.0"
   },
   "private": true,
   "scripts": {
