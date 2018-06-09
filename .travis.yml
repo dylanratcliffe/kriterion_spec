@@ -2,9 +2,10 @@ language: node_js
 node_js:
   - "node"
 
-cache:
-  directories:
-    - node_modules
+# Cache seems to be causing issues with `npm ci`
+# cache:
+#   directories:
+#     - node_modules
 
 env:
   - NODE_DEBUG=gh-pages
