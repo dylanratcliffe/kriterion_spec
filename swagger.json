@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Puppet Compliance API",
-    "description": "# Using the API\n\n## Object Hierarachy\n\n``` TODO: Finish this\nStandard\nItem\nSection\nResource\nEvent\n```\n\nEach of these objects has a many to-one relationhsip with its upstream counterpart.\n\n# Puppet Integration\n\nIn order for the compliance API to be able to query the Puppet database and filter out events/resources that are not relevant to compliance, all resoures that are to appear in the compliance API must be tagged. The Compliance API server will then extract data based on these tags.\n\nEach resource must have at least the following tags:\n\n  - **Standard Name:** The name of the standard, as returned by the `/standard` endpoint\n  - **Item Number:** The number of the item that the resource is relevant to. This must match the `item_syntax` regular expression\n\nAn example of enforcing item `V-38598` from the `STIG_RHEL_6` standard would be as follows:\n\n```puppet\nservice { 'rexecd':\n  ensure => stopped,\n  enable => false,\n  tag    => [\n    'STIG_RHEL_6',\n    'V-38598',\n  ],\n}\n```\n\nThese tags can be applied on a per-resource basis, or to an entire scope using the [tag()](https://puppet.com/docs/puppet/5.3/lang_tags.html#the-tag-function) function.\n\nProperly tagging resources is the only thing that is required from the Puppet side in order to use this API.\n",
+    "description": "# Using the API\n\n## Object Hierarachy\n\n```\nStandard\n├── Item\n|   └── Resource\n|       └── Event\n└── Section\n    ├── Section\n    |   └── Section.. etc\n    └── Item\n        └── Resource\n            └── Event\n```\n\n**The Blurb**\n\n*A `standard` represents a compliance standard such as the STIG standard for RHEL 7. A standard is usually made up of many `sections` such as \"Networking\" or \"User Access\", however they may have direct items under them too. `Sections` are purely for organisation and usually have a name and a number such as 3. Each section may have many items and subsections such as 3.1, 3.2, 3.2.1 etc. An `item` represents a thing that the compliance standard has a particular opinion about. This might be that \"All .rhosts files should be absent\" or similar. An `item` may be implemented by one or many `resources`. On some servers it might take just one resource to ensure that an item is compliant, on others it might take 7. Each resource then has `events`. Hopefully most of the time the events are \"unchanged\" which would mean that the resource is compliant on that server, however they may have a pending noop action or be failing which would mean that particular resource and by extension, item, section and standard are to some degree non-compliant.*\n\n# Puppet Integration\n\nIn order for the compliance API to be able to query the Puppet database and filter out events/resources that are not relevant to compliance, all resoures that are to appear in the compliance API must be tagged. The Compliance API server will then extract data based on these tags.\n\nEach resource must have at least the following tags:\n\n  - **Standard Name:** The name of the standard, as returned by the `/standard` endpoint\n  - **Item Number:** The number of the item that the resource is relevant to. This must match the `item_syntax` regular expression\n\nAn example of enforcing item `V-38598` from the `STIG_RHEL_6` standard would be as follows:\n\n```puppet\nservice { 'rexecd':\n  ensure => stopped,\n  enable => false,\n  tag    => [\n    'STIG_RHEL_6',\n    'V-38598',\n  ],\n}\n```\n\nThese tags can be applied on a per-resource basis, or to an entire scope using the [tag()](https://puppet.com/docs/puppet/5.3/lang_tags.html#the-tag-function) function.\n\nProperly tagging resources is the only thing that is required from the Puppet side in order to use this API.\n",
     "version": "0.1.0",
     "contact": {
       "email": "dylanratcliffe@outlook.com"
@@ -12,12 +12,6 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "servers": [
-    {
-      "url": "http://localhost/v1",
-      "description": "TODO"
-    }
-  ],
   "tags": [
     {
       "name": "event",
@@ -25,7 +19,7 @@
     },
     {
       "name": "item",
-      "description": "Returns items TODO"
+      "description": "Returns items, these are things that are actually compliant or non-compliant"
     },
     {
       "name": "resource",
@@ -76,9 +70,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -166,6 +157,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -244,6 +238,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -292,6 +289,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -328,6 +328,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -373,6 +376,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -459,6 +465,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/Error"
           }
         }
       }
@@ -728,7 +737,7 @@
                 "$ref": "#/components/schemas/UUID"
               },
               {
-                "description": "UUID of the section that this item is relevant to. Can also return `null` if the item is a direct child of a standard. *TODO: Is this required? Seems like this is making it very relational-database-ey, does it really need to be here?*",
+                "description": "UUID of the section that this item is relevant to. Can also return `null` if the item is a direct child of a standard.",
                 "nullable": true
               }
             ]
@@ -946,6 +955,10 @@
           "message": {
             "type": "string",
             "description": "From PuppetDB"
+          },
+          "compliant?": {
+            "type": "boolean",
+            "description": "Wheather or not the resource is compliant, based on the `status`"
           }
         }
       },
