@@ -176,7 +176,7 @@ paths:
                   - $ref: '#/components/schemas/FullSection'
         '404':
           $ref: '#/components/responses/Error'
-  '/sections/{uuid}/subsections':
+  '/sections/{uuid}/sections':
     get:
       summary: Return all subsections for a given section
       operationId: getSectionSubsections
@@ -466,7 +466,7 @@ components:
               allOf:
                 - $ref: '#/components/schemas/ComplianceCount'
                 - description: "Compliance state of all direct child items and and the child items of all subsecions, and their subsecions, and their subsecions... you get it"
-            subsections:
+            sections:
               allOf:
                 - $ref: '#/components/schemas/ComplianceCount'
                 - description: "Compliance count of all subsections based on their boolean compliance value"
@@ -479,7 +479,7 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/FullItem"
-            subsections:
+            sections:
               type: array
               nullable: true
               items:
@@ -508,7 +508,7 @@ components:
             - $ref: '#/components/schemas/UUID'
             - description: "UUID of the section that this item is relevant to. Can also return `null` if the item is a direct child of a standard."
               nullable: true
-        subsection_path:
+        section_path:
           type: array
           description: This is an array of the capturinng groups that have been found for this item. If there are no subsections this will be an empty array
           items:
