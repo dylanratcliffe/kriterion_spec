@@ -203,7 +203,7 @@
         }
       }
     },
-    "/sections/{uuid}/subsections": {
+    "/sections/{uuid}/sections": {
       "get": {
         "summary": "Return all subsections for a given section",
         "operationId": "getSectionSubsections",
@@ -668,7 +668,7 @@
                   }
                 ]
               },
-              "subsections": {
+              "sections": {
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/ComplianceCount"
@@ -696,7 +696,7 @@
                   "$ref": "#/components/schemas/FullItem"
                 }
               },
-              "subsections": {
+              "sections": {
                 "type": "array",
                 "nullable": true,
                 "items": {
@@ -742,7 +742,7 @@
               }
             ]
           },
-          "subsection_path": {
+          "section_path": {
             "type": "array",
             "description": "This is an array of the capturinng groups that have been found for this item. If there are no subsections this will be an empty array",
             "items": {
