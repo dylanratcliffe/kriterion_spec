@@ -630,7 +630,11 @@
           },
           "name": {
             "type": "string",
-            "description": "The name of the section is just all the capturing groups minus the last one, joined with the `section_separator` from the `standard`"
+            "description": "The name of the section is just all the capturing groups joined with the `section_separator` from the `standard`"
+          },
+          "title": {
+            "type": "string",
+            "description": "Descriptive short title for the section"
           },
           "standard": {
             "type": "string",
