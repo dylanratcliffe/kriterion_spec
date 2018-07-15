@@ -444,7 +444,10 @@ components:
           $ref: '#/components/schemas/UUID'
         name:
           type: string
-          description: "The name of the section is just all the capturing groups minus the last one, joined with the `section_separator` from the `standard`"
+          description: "The name of the section is just all the capturing groups joined with the `section_separator` from the `standard`"
+        title:
+          type: string
+          description: "Descriptive short title for the section"
         standard:
           type: string
           description: "Name of the standard that the section is relevant to. This is not likely to be very useful as the structure of the `/standards` and `/compliance` endpoints will imply the standard from the structure of the return value, but we have the info so we may as well provide it."
