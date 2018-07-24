@@ -735,20 +735,20 @@
             "nullable": true,
             "description": "A string representing the severity of the `item`. Possibly the `standard` should define some way of telling actually how severe something is so that it can have a colour or something."
           },
-          "section_uuid": {
+          "parent_uuid": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/UUID"
               },
               {
-                "description": "UUID of the section that this item is relevant to. Can also return `null` if the item is a direct child of a standard.",
+                "description": "UUID of the section/standard that this item is relevant to. Can also return `null` if the item is a direct child of a standard.",
                 "nullable": true
               }
             ]
           },
           "section_path": {
             "type": "array",
-            "description": "This is an array of the capturinng groups that have been found for this item. If there are no subsections this will be an empty array",
+            "description": "This is an array of the capturing groups that have been found for this item. If there are no subsections this will be an empty array",
             "items": {
               "type": "integer"
             }
