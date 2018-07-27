@@ -1,14 +1,12 @@
-# Puppet Compliance OpenAPI Specification
+# Kriterion OpenAPI Specification
 [![Build Status](https://travis-ci.org/dylanratcliffe/compliance_api_spec.svg?branch=master)](https://travis-ci.org/dylanratcliffe/compliance_api_spec)
 
 ## Links
 
-- Documentation(ReDoc): https://dylanratcliffe.github.io/compliance_api_spec/
-- SwaggerUI: https://dylanratcliffe.github.io/compliance_api_spec/swagger-ui/
+- Documentation: https://dylanratcliffe.github.io/compliance_api_spec/
 - Look full spec:
     + JSON https://dylanratcliffe.github.io/compliance_api_spec/swagger.json
     + YAML https://dylanratcliffe.github.io/compliance_api_spec/swagger.yaml
-- Preview spec version for branch `[branch]`: https://dylanratcliffe.github.io/compliance_api_spec/preview/[branch]
 
 ## Working on specification
 
