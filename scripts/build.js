@@ -29,4 +29,4 @@ fs.readdirSync(specFolder).forEach(file => {
   }
 })
 
-sed('-i', 'http://petstore.swagger.io/v2/swagger.json', 'swagger.json', 'web/index.html')
+sed('-i', 'http://petstore.swagger.io/v2/swagger.json', 'openapi.json', 'web/index.html')
