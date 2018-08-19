@@ -51,12 +51,14 @@ info:
   version: "0.1.0"
   contact:
     email: "dylanratcliffe@outlook.com"
+    name: "Dylan Ratcliffe"
+    url: "https://github.com/dylanratcliffe"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-# servers:
-#   - url: "http://localhost/v1"
-#     description: Not yet implemented
+servers:
+  - url: "http://kriterion.youcan.dance/"
+    description: Main example API
 tags:
   - name: event
     description: Gives details of events, a child of resources
@@ -703,6 +705,6 @@ components:
               message:
                 type: string
                 nullable: true
-# externalDocs:
-#   description: Find out more about Swagger
-#   url: "http://swagger.io"
+externalDocs:
+  description: Github Page
+  url: "https://github.com/dylanratcliffe/kriterion"
