@@ -291,15 +291,13 @@ paths:
         - $ref: '#/components/parameters/DetailLevel'
       responses:
         '200':
-          description: Array of all resources for the requested standard
+          description: The resource that matches the query
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  oneOf:
-                    - $ref: '#/components/schemas/BasicResource'
-                    - $ref: '#/components/schemas/FullResource'
+                oneOf:
+                  - $ref: '#/components/schemas/BasicResource'
+                  - $ref: '#/components/schemas/FullResource'
         '404':
           $ref: '#/components/responses/Error'
   '/events':
