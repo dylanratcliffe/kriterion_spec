@@ -16,7 +16,7 @@
   },
   "servers": [
     {
-      "url": "http://kriterion.youcan.dance",
+      "url": "https://kriterion.youcan.dance",
       "description": "Main example API"
     }
   ],
