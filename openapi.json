@@ -553,8 +553,18 @@
             "description": "Free text version"
           },
           "item_syntax": {
-            "type": "string",
-            "description": "Regular expression that is used to determine which other tag on each resource determines the \"item\" that it is relevant to. If this contains capturing groups, the groups are used to determine sections and subsections e.g. `^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.$` would mean that the API is expecting versions like so:\n\n `1.2.3`\n\n And that the subsections are as follows:\n\n `[1, 2, 3]`\n\n If the regular expression that is provided does not have any capturin groups, we can assume that the standard does not have sections. In this scenario the `sections` attribute will return `null` and hen doing the full compliance query everything will just come back in a flat thing"
+            "type": "object",
+            "description": "Regular expression that is used to determine which other tag on each resource determines the \"item\" that it is relevant to. If this contains capturing groups, the groups are used to determine sections and subsections e.g. `^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.$` would mean that the API is expecting versions like so:\n\n `1.2.3`\n\n And that the subsections are as follows:\n\n `[1, 2, 3]`\n\n If the regular expression that is provided does not have any capturin groups, we can assume that the standard does not have sections. In this scenario the `sections` attribute will return `null` and hen doing the full compliance query everything will just come back in a flat thing. The structure of the return value here uses Ruby's style of serialising regex to JSON but should be interoperable with other languages with little effort. Someone should probably standardise this.",
+            "properties": {
+              "$regex": {
+                "type": "string",
+                "description": "String representation of the Ruby style regex"
+              },
+              "$options": {
+                "type": "string",
+                "description": "Options for the regex, such as `g` (global) or `m` (multiline)"
+              }
+            }
           },
           "section_separator": {
             "type": "string",
