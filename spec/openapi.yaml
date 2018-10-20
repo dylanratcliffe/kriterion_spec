@@ -526,6 +526,9 @@ components:
           description: This is an array of the capturing groups that have been found for this item. If there are no subsections this will be an empty array
           items:
             type: "integer"
+        standard:
+          type: string
+          description: "Name of the standard this item is relevant to"
         compliance:
           type: object
           nullable: true
