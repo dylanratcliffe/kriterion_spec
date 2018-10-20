@@ -768,6 +768,10 @@
               "type": "integer"
             }
           },
+          "standard": {
+            "type": "string",
+            "description": "Name of the standard this item is relevant to"
+          },
           "compliance": {
             "type": "object",
             "nullable": true,
