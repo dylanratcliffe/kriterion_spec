@@ -136,14 +136,56 @@ paths:
                   propertyName: object_type
         '404':
           $ref: '#/components/responses/Error'
+  '/standards/{standard}/sections':
+    get:
+      summary: Return all sections for a given standard.
+      operationId: getStandardSections
+      tags:
+        - standard
+      parameters:
+        - $ref: '#/components/parameters/Standard'
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Returns all sections for a given standard
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/BasicSection'
+                    - $ref: '#/components/schemas/FullSection'
+        '404':
+          $ref: '#/components/responses/Error'
+  '/standards/{standard}/items':
+    get:
+      summary: Get all items within a standard.
+      operationId: getStandardItems
+      tags:
+        - standard
+      parameters:
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Returns all items for all standards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/BasicItem'
+                    - $ref: '#/components/schemas/FullItem'
+        '404':
+          $ref: '#/components/responses/Error'
   '/sections':
     get:
-      summary: Return all sections. Can be filtered.
-      operationId: getSections
+      summary: Return all sections.
+      operationId: getAllSections
       tags:
         - section
       parameters:
-        - $ref: '#/components/parameters/Standard'
         - $ref: '#/components/parameters/DetailLevel'
       responses:
         '200':
@@ -200,6 +242,27 @@ paths:
                     - $ref: '#/components/schemas/FullSection'
         '404':
           $ref: '#/components/responses/Error'
+  '/sections/{uuid}/items':
+    get:
+      summary: Get all items for a section.
+      operationId: getSectionItems
+      tags:
+        - section
+      parameters:
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Returns all items for all standards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/BasicItem'
+                    - $ref: '#/components/schemas/FullItem'
+        '404':
+          $ref: '#/components/responses/Error'
   '/items':
     get:
       summary: Search for items.
@@ -208,13 +271,6 @@ paths:
         - item
       parameters:
         - $ref: '#/components/parameters/DetailLevel'
-        - $ref: '#/components/parameters/Standard'
-        - name: section
-          in: query
-          required: false
-          description: "`uuid` of the section"
-          schema:
-            $ref: '#/components/schemas/UUID'
       responses:
         '200':
           description: Returns all items for all standards
@@ -248,6 +304,28 @@ paths:
                   - $ref: '#/components/schemas/FullItem'
         '404':
           $ref: '#/components/responses/Error'
+  '/items/{uuid}/resources':
+    get:
+      summary: Queries resources
+      operationId: getItemResources
+      tags:
+        - item
+      parameters:
+        - $ref: '#/components/parameters/UUID'
+        - $ref: '#/components/parameters/DetailLevel'
+      responses:
+        '200':
+          description: Array of all resources item
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/BasicResource'
+                    - $ref: '#/components/schemas/FullResource'
+        '404':
+          $ref: '#/components/responses/Error'
   '/resources':
     get:
       summary: Queries resources
@@ -255,16 +333,10 @@ paths:
       tags:
         - resource
       parameters:
-        - name: item
-          in: query
-          required: false
-          description: "`UUID` of the item"
-          schema:
-            $ref: '#/components/schemas/UUID'
         - $ref: '#/components/parameters/DetailLevel'
       responses:
         '200':
-          description: Array of all resources for the requested standard
+          description: Array of all resources
           content:
             application/json:
               schema:
@@ -300,16 +372,16 @@ paths:
                   - $ref: '#/components/schemas/FullResource'
         '404':
           $ref: '#/components/responses/Error'
-  '/events':
+  '/resources/{uuid}/events':
     get:
-      summary: Queries events
+      summary: Queries events for a given resource
       operationId: getEvents
       tags:
-        - event
+        - resource
       parameters:
-        - name: resource
-          in: query
-          required: false
+        - name: uuid
+          in: path
+          required: true
           description: "`UUID` of the resource"
           schema:
             $ref: '#/components/schemas/UUID'
@@ -317,6 +389,23 @@ paths:
       responses:
         '200':
           description: Array of all events for a given resource
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        '404':
+          $ref: '#/components/responses/Error'
+  '/events':
+    get:
+      summary: Queries events
+      operationId: getEvents
+      tags:
+        - event
+      responses:
+        '200':
+          description: Array of all events
           content:
             application/json:
               schema:
@@ -409,6 +498,18 @@ components:
         section_separator:
           type: string
           description: This is what is used to construct the names of each section. If a section is found that has subsections, the capturing groups will be joined using the separator giving nice subsection names such as \"1.1.3\". If this is set to `null`, subsections will not be joined and will be names exactly as captured in the capturing group.
+        sections:
+          type: array
+          nullable: true
+          description: "A list of references to subsections"
+          items:
+            $ref: "#/components/schemas/Reference"
+        items:
+          type: array
+          nullable: true
+          description: "A list of references to direct child items"
+          items:
+            $ref: "#/components/schemas/Reference"
         compliance:
           type: object
           description: "This should return a summary of the compliance information of all `items` and `sections` under this standard. you could possibly argue that this should also return the `resource` and `event` info but I feel like that's probably a bit much. It can always be added later if required."
@@ -464,6 +565,15 @@ components:
         description:
           type: string
           description: "Description of the section. This comes from the standard backend, should support markdown as should all long text fields."
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Reference"
+        sections:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/Reference"
         compliance:
           type: object
           description: "This should return a summary of the compliance information of all `items` under this section. you could possibly argue that this should also return the `resource` and `event` info but I feel like that's probably a bit much. It can always be added later if required."
@@ -529,6 +639,12 @@ components:
         standard:
           type: string
           description: "Name of the standard this item is relevant to"
+        resources:
+          type: array
+          description: "References to the resources within the starndard"
+          nullable: true
+          items:
+            $ref: '#/components/schemas/Reference'
         compliance:
           type: object
           nullable: true
@@ -578,6 +694,10 @@ components:
         line:
           type: integer
           description: From PuppetDB
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
         compliance:
           type: object
           properties:
@@ -693,6 +813,13 @@ components:
       type: string
       description: "UUID as per RFC 4122"
       pattern: '[0-9A-f]{8}-[0-9A-f]{4}-[0-9A-f]{4}-[0-9A-f]{4}-[0-9A-f]{12}'
+    Reference:
+      type: object
+      description: "A reference to another object in the API"
+      properties:
+        href:
+          type: string # TODO: Is there are native data type for URIs?
+          description: "Reference to the API request that will return the referenced object"
 
   #
   # Responses
