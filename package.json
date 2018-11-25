@@ -1,6 +1,6 @@
 {
   "name": "swagger-ui-dist",
-  "version": "3.18.1",
+  "version": "3.20.1",
   "main": "index.js",
   "repository": "git@github.com:swagger-api/swagger-ui.git",
   "contributors": [
@@ -16,7 +16,7 @@
   "dependencies": {},
   "devDependencies": {}
 
-,"_resolved": "https://registry.npmjs.org/swagger-ui-dist/-/swagger-ui-dist-3.18.1.tgz"
-,"_integrity": "sha512-Erk0fVrZMmSXrfptHspaHY0Joir3OGM0oHnKEo7LuhCtJtCf+RqcrwiiKUzNhKsxYLrpUC3blnsPz4Efip6CqQ=="
-,"_from": "swagger-ui-dist@3.18.1"
+,"_resolved": "https://registry.npmjs.org/swagger-ui-dist/-/swagger-ui-dist-3.20.1.tgz"
+,"_integrity": "sha512-iqFNNmJWH24leUj/ohS5iZTHLZSPZse8c9F+WSCMi6ZJcRBgYKcT413c8BR5BEdKvU1kkIwvYy7C8DOjTRq9hQ=="
+,"_from": "swagger-ui-dist@3.20.1"
 }
