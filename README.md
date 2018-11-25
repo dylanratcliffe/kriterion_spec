@@ -1,12 +1,9 @@
 # Kriterion OpenAPI Specification
-[![Build Status](https://travis-ci.org/dylanratcliffe/compliance_api_spec.svg?branch=master)](https://travis-ci.org/dylanratcliffe/compliance_api_spec)
+[![Build Status](https://travis-ci.org/dylanratcliffe/kriterion_spec.svg?branch=master)](https://travis-ci.org/dylanratcliffe/kriterion_spec)
 
 ## Links
 
-- Documentation: https://dylanratcliffe.github.io/compliance_api_spec/
-- Look full spec:
-    + JSON https://dylanratcliffe.github.io/compliance_api_spec/swagger.json
-    + YAML https://dylanratcliffe.github.io/compliance_api_spec/swagger.yaml
+- Documentation: https://dylanratcliffe.github.io/kriterion_spec/
 
 ## Working on specification
 
