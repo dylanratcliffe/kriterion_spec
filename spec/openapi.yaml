@@ -180,6 +180,25 @@ paths:
                     - $ref: '#/components/schemas/FullItem'
         '404':
           $ref: '#/components/responses/Error'
+  '/standards/{standard}/summary':
+    get:
+      summary: Get the summary of a standard at a given point in time.
+      operationId: getStandardSummary
+      tags:
+        - standard
+      parameters:
+       - $ref: '#/components/parameters/Standard'
+       - $ref: '#/components/parameters/Time'
+      responses:
+        '200':
+          description: Returns the summary for the given standard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardSummary'
+        '404':
+          $ref: '#/components/responses/Error'
+
   '/sections':
     get:
       summary: Return all sections.
@@ -265,6 +284,24 @@ paths:
                     - $ref: '#/components/schemas/FullItem'
         '404':
           $ref: '#/components/responses/Error'
+  '/sections/{uuid}/summary':
+    get:
+      summary: Get the summary of a section at a given point in time.
+      operationId: getSectionSummary
+      tags:
+        - section
+      parameters:
+        - $ref: '#/components/parameters/UUID'
+        - $ref: '#/components/parameters/Time'
+      responses:
+        '200':
+          description: Returns the summary for the given section
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionSummary'
+        '404':
+          $ref: '#/components/responses/Error'
   '/items':
     get:
       summary: Search for items.
@@ -326,6 +363,24 @@ paths:
                   oneOf:
                     - $ref: '#/components/schemas/BasicResource'
                     - $ref: '#/components/schemas/FullResource'
+        '404':
+          $ref: '#/components/responses/Error'
+  '/items/{uuid}/summary':
+    get:
+      summary: Get the summary of a item at a given point in time.
+      operationId: getItemSummary
+      tags:
+        - item
+      parameters:
+        - $ref: '#/components/parameters/UUID'
+        - $ref: '#/components/parameters/Time'
+      responses:
+        '200':
+          description: Returns the summary for the given item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemSummary'
         '404':
           $ref: '#/components/responses/Error'
   '/resources':
@@ -399,6 +454,24 @@ paths:
                   $ref: '#/components/schemas/Event'
         '404':
           $ref: '#/components/responses/Error'
+  '/resources/{uuid}/summary':
+    get:
+      summary: Get the summary of a resource at a given point in time.
+      operationId: getResourceSummary
+      tags:
+        - resource
+      parameters:
+        - $ref: '#/components/parameters/UUID'
+        - $ref: '#/components/parameters/Time'
+      responses:
+        '200':
+          description: Returns the summary for the given resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceSummary'
+        '404':
+          $ref: '#/components/responses/Error'
   '/events':
     get:
       summary: Queries events
@@ -460,6 +533,15 @@ components:
       description: "`uuid` of object that is being queried"
       schema:
         $ref: '#/components/schemas/UUID'
+    
+    Time:
+      name: time
+      in: query
+      required: false
+      description: The time from which the information should be taken. The resulting summary object will represent the compliance state at the time selected.
+      schema:
+        type: string
+        format: date-time
 
   #
   # Schemas
@@ -820,8 +902,105 @@ components:
       description: "A reference to another object in the API"
       properties:
         href:
-          type: string # TODO: Is there are native data type for URIs?
+          type: string
+          format: uri
           description: "Reference to the API request that will return the referenced object"
+    #
+    # Summaries
+    #
+    ResourceSummary:
+      type: object
+      description: "Summary of a particular resource"
+      properties:
+        type:
+          type: string
+          description: The resource type
+        title:
+          type: string
+          description: The resource title
+        uuid:
+          $ref: '#/components/schemas/UUID'
+        events:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+            total:
+              type: integer
+              description: "Total number of events. There is no concept of 'compliant' of 'non-compliant' events here due to the fact that all evens are non-compliant and compliance is a lack of events"
+        nodes:
+          type: object
+          properties:
+            compliant:
+              type: integer
+              description: Number of compliant nodes (With no events)
+            non_compliant:
+              type: integer
+              description: Number of nodes with at least one event
+    ItemSummary:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+          description: Title of the item
+        href:
+          type: string
+          format: uri
+          description: Reference to the path of the full item
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceSummary'
+    SectionSummary:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          description: Name of the section
+        href:
+          type: string
+          format: uri
+          description: Reference to the path of the full section
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemSummary'
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/SectionSummary'
+    StandardSummary:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the section
+        href:
+          type: string
+          format: uri
+          description: Reference to the path of the full standard
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemSummary'
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/SectionSummary'
+
+
+
+
+        
+
+
+
+
 
   #
   # Responses
